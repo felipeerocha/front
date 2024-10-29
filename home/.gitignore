@@ -1,13 +1,28 @@
-# Dependências
+# Dependências do Node.js
 node_modules/
-npm-debug.log
-yarn-debug.log
-yarn-error.log
+.pnp/
+.pnp.js
 
-# Build
-build/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diretórios de compilação
 dist/
+build/
 
-# Outras configurações
+# Arquivos de configuração de ambiente
 .env
-.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+
+# Outros arquivos de cache
+.cache/
+.tmp/

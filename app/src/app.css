@@ -1,5 +1,26 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+#root {
+    background-image: url('assets/img/stefanini-fundo.png'); /* Substitua pelo caminho da sua imagem */
+    background-size: cover; /* Ajusta a imagem para cobrir toda a tela */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat; /* Evita a repetição da imagem */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilize o link dentro da barra de navegação */
 .nav-item a {
-    color:black;
+    color: black;
     padding: 10px;
     font-weight: bold;
+    text-decoration: none; /* Remove o sublinhado */
+}
+
+.nav-item a:hover {
+    color: #007bff; /* Cor ao passar o mouse */
 }

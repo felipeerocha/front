@@ -34,6 +34,19 @@ module.exports = {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader'],
             },
+            // Add this rule for image files
+            {
+                test: /\.(png|jpe?g|gif|svg)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]',
+                            outputPath: 'images/', // Specify the output directory
+                        },
+                    },
+                ],
+            },
         ],
     },
     plugins: [
