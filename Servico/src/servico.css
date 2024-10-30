@@ -1,0 +1,91 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.container-cotas {
+    max-width: 1100px; /* Reduzido de 1250px */
+    padding: 60px; /* Reduzido de 100px */
+    border-radius: 20px; /* Reduzido de 30px */
+    background-color: white;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Reduzido de 0 4px 10px */
+    margin: 30px auto; /* Reduzido de 50px */
+    text-align: center;
+}
+
+.status-disponivel {
+    color: green;
+    font-weight: bold;
+}
+
+.status-ocupada {
+    color: red;
+    font-weight: bold;
+}
+
+.titulo {
+    margin-bottom: 30px; /* Reduzido de 50px */
+    margin-top: -20px; /* Ajustado */
+    color: #007ab7;
+    font-family: "Poppins", sans-serif;
+    font-size: 35px; /* Reduzido de 45px */
+    font-weight: bold;
+    text-align: center;
+}
+
+.cotas-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 10px;
+    max-height: 500px; 
+    overflow-y: auto; 
+    justify-content: center;
+
+}
+
+.cota-card {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.cota-card:hover {
+    transform: translateY(-10px);
+}
+
+.cota-info {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.cota-info span {
+    display: block;
+    margin: 5px 0;
+}
+
+.reservar-button {
+    padding: 5px 15px;
+    background-color: #007ab7;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reservar-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.reservar-button:hover:not(:disabled) {
+    background-color: #9b9900;
+}

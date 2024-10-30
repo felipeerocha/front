@@ -8,13 +8,13 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9003/'
+        publicPath: 'http://localhost:9005/'
     },
     devServer: {
         static: {
             directory: path.resolve(__dirname, './dist'),
         },
-        port: 9003,
+        port: 9005,
         historyApiFallback: true, 
     },
     
@@ -46,10 +46,10 @@ module.exports = {
 
         // webpack.config.js em Contact
         new ModuleFederationPlugin({
-            name: "ContactApp",
+            name: "ServicoApp",
             filename: "remoteEntry.js",
             exposes: {
-            "./ContactPage": "./src/Contact",
+            "./ServicoPage": "./src/Servico",
           },
             shared: { react: { singleton: true }, "react-dom": { singleton: true } },
         })        

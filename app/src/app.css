@@ -13,14 +13,3 @@ body, html {
     flex-direction: column;
 }
 
-/* Estilize o link dentro da barra de navegação */
-.nav-item a {
-    color: black;
-    padding: 10px;
-    font-weight: bold;
-    text-decoration: none; /* Remove o sublinhado */
-}
-
-.nav-item a:hover {
-    color: #007bff; /* Cor ao passar o mouse */
-}

@@ -1,6 +1,6 @@
-import Contact from './Contact';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Carro from './Carro';
 
-ReactDOM.render(<Contact/>, document.querySelector('#root'));
+ReactDOM.render(<Carro/>, document.querySelector('#root'));

@@ -8,13 +8,13 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9001/'
+        publicPath: 'http://localhost:9003/'
     },
     devServer: {
         static: {
             directory: path.resolve(__dirname, './dist'),
         },
-        port: 9001,
+        port: 9003,
         historyApiFallback: true, 
     },
     
@@ -43,15 +43,15 @@ module.exports = {
             template: './public/index.html',
             title: 'App'
         }),
+
+        // webpack.config.js em Contact
         new ModuleFederationPlugin({
-            name: "App",
-            remotes: {
-                HomeApp: "HomeApp@http://localhost:9002/remoteEntry.js",
-                ImovelApp: "ImovelApp@http://localhost:9003/remoteEntry.js",
-                CarroApp: "CarroApp@http://localhost:9004/remoteEntry.js",
-                ServicoApp: "ServicoApp@http://localhost:9005/remoteEntry.js",
-            },
+            name: "ImovelApp",
+            filename: "remoteEntry.js",
+            exposes: {
+            "./ImovelPage": "./src/Imovel",
+          },
             shared: { react: { singleton: true }, "react-dom": { singleton: true } },
-        }),        
+        })        
     ]
 }
