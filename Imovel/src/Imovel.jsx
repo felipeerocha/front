@@ -50,6 +50,9 @@ const Contact = () => {
                     </div>
                 ))}
             </div>
+            <button className="voltar-button" type="button" onClick={() => window.location.href = '/'}>
+                        Voltar
+                    </button>
         </div>
     );
 };

@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.minhas-cotas, .login-form {
+    max-width: 600px;
+    padding: 40px;
+    margin: 30px auto;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}
+
+.minhas-cotas h2, .login-form h2 {
+    color: #007ab7;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.login-form label, .minhas-cotas p {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+    margin: 10px 0;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.minhas-cotas ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.minhas-cotas li {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.minhas-cotas li p {
+    margin: 5px 0;
+    font-weight: 400;
+}
+
+.button-group, .login-form button {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.login-form button, .minhas-cotas button {
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: white;
+}
+
+.login-form button {
+    background-color: #007ab7;
+    margin-top: 10px;
+}
+
+.logout-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
+}
+
+.login-form button:hover, .reservar-button:hover {
+    background-color: #005f8a;
+}
+
+.reservar-button, .editar-button, .excluir-button {
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+}
+
+.editar-button {
+    background-color: #3498db;
+}
+
+.excluir-button {
+    background-color: #e74c3c;
+}
+
+.editar-button:hover {
+    background-color: #2980b9;
+}
+
+.excluir-button:hover {
+    background-color: #c0392b;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}

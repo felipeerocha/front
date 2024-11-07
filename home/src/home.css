@@ -18,7 +18,7 @@
    
 }
 .btn {
-    font-family: "Poppins", sans-serif;
+    font-family: "Poppins", 'Courier New', Courier, monospace;
     background-color: #007ab7;
     border-radius: 12px;
     font-weight: bold;

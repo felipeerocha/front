@@ -6,7 +6,7 @@ import carroImg from './assets/img/carro.jpg';
 import reformaImg from './assets/img/reforma.jpg';
 import logoImg from './assets/img/logo.png';
 import './home.css';
-
+ 
 const Home = () => {
   const [consorcios, setConsorcios] = useState([]);
 

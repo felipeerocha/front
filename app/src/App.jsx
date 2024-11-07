@@ -3,18 +3,18 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Link
 } from 'react-router-dom';
 
-// css
+// CSS
 import './app.css';
 
 const App = () => {
-    
     const HomePage = React.lazy(() => import("HomeApp/HomePage"));
     const ImovelPage = React.lazy(() => import("ImovelApp/ImovelPage"));
     const CarroPage = React.lazy(() => import("CarroApp/CarroPage"));
     const ServicoPage = React.lazy(() => import("ServicoApp/ServicoPage"));
+    const CadastroPage = React.lazy(() => import("CadastroApp/CadastroPage"));
+    const MinhasCotasPage = React.lazy(() => import("MinhasCotasApp/MinhasCotasPage"));
 
     return (
         <Router>
@@ -49,6 +49,22 @@ const App = () => {
                         element={
                             <Suspense fallback={<div>Loading...</div>}>
                                 <ServicoPage />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/Cadastro"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <CadastroPage />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/MinhasCotas"
+                        element={
+                            <Suspense fallback={<div>Loading...</div>}>
+                                <MinhasCotasPage />
                             </Suspense>
                         }
                     />

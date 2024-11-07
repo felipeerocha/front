@@ -89,3 +89,15 @@
 .reservar-button:hover:not(:disabled) {
     background-color: #9b9900;
 }
+
+.voltar-button {
+    color: #007ab7;
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}

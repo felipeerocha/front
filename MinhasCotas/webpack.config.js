@@ -8,16 +8,15 @@ module.exports = {
     output: {
         filename: '[name].js',
         path: path.resolve(__dirname, './dist'),
-        publicPath: 'http://localhost:9001/'
+        publicPath: 'http://localhost:9007/'
     },
     devServer: {
         static: {
             directory: path.resolve(__dirname, './dist'),
         },
-        port: 9001,
+        port: 9007,
         historyApiFallback: true, 
     },
-    
     resolve:{
         extensions: [".jsx", ".js", ".json"]
     },
@@ -26,7 +25,7 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 loader: require.resolve("babel-loader"),
-                exclude: /node_modules/, // Ignora o node_modules
+                exclude: /node_modules/,
                 options: {
                     presets: [require.resolve("@babel/preset-react")]
                 }
@@ -43,17 +42,18 @@ module.exports = {
             template: './public/index.html',
             title: 'App'
         }),
+
         new ModuleFederationPlugin({
-            name: "App",
-            remotes: {
-                HomeApp: "HomeApp@http://localhost:9002/remoteEntry.js",
-                ImovelApp: "ImovelApp@http://localhost:9003/remoteEntry.js",
-                CarroApp: "CarroApp@http://localhost:9004/remoteEntry.js",
-                ServicoApp: "ServicoApp@http://localhost:9005/remoteEntry.js",
-                CadastroApp: "CadastroApp@http://localhost:9006/remoteEntry.js",
-                MinhasCotasApp: "MinhasCotasApp@http://localhost:9007/remoteEntry.js",
+            name: "MinhasCotasApp",
+            filename: "remoteEntry.js",
+            exposes: {
+                "./MinhasCotasPage": "./src/MinhasCotas",
             },
-            shared: { react: { singleton: true }, "react-dom": { singleton: true } },
-        }),        
+            shared: {
+                react: { singleton: true },
+                "react-dom": { singleton: true },
+                "react-router-dom": { singleton: true }, 
+            },
+        })        
     ]
-}
+};

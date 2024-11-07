@@ -49,7 +49,11 @@ const Servico = () => {
                         </button>
                     </div>
                 ))}
+                
             </div>
+            <button className="voltar-button" type="button" onClick={() => window.location.href = '/'}>
+                        Voltar
+                    </button>
         </div>
     );
 };

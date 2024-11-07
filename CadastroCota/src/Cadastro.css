@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.cadastro-cota {
+    max-width: 600px;
+    padding: 40px;
+    margin: 30px auto;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}
+
+.cadastro-cota h2 {
+    color: #007ab7;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.cota-info p {
+    font-size: 16px;
+    color: #333;
+    margin: 10px 0;
+}
+
+.cadastro-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.cadastro-form label {
+    width: 100%;
+    font-weight: 500;
+    color: #333;
+}
+
+.cadastro-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.cadastro-form input[disabled] {
+    background-color: #f5f5f5;
+    color: #888;
+    cursor: not-allowed;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    gap: 10px;
+    width: 100%;
+}
+
+.reservar-button,
+.cancelar-button,
+.voltar-button {
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reservar-button {
+    background-color: #007ab7;
+    color: white;
+}
+
+.cancelar-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.voltar-button {
+    background-color: #ccc;
+    color: #333;
+}
+
+.reservar-button:hover {
+    background-color: #005f8a;
+}
+
+.cancelar-button:hover {
+    background-color: #c0392b;
+}
+
+.voltar-button:hover {
+    background-color: #aaa;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+    font-weight: bold;
+}
