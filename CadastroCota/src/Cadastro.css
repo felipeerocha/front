@@ -1,7 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 .cadastro-cota {
-    max-width: 600px;
+    max-width: 800px;
     padding: 40px;
     margin: 30px auto;
     border-radius: 20px;
@@ -18,39 +16,48 @@
     margin-bottom: 20px;
 }
 
-.cota-info p {
-    font-size: 16px;
-    color: #333;
-    margin: 10px 0;
-}
-
-.cadastro-form {
+.cadastro-container {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
 }
 
-.cadastro-form label {
+.cota-info,
+.cadastro-form {
     width: 100%;
+    max-width: 350px;
+    text-align: left;
+}
+
+.cota-info label,
+.cadastro-form label {
     font-weight: 500;
     color: #333;
+    display: block;
+    margin-bottom: 10px;
 }
 
-.cadastro-form input {
+.cota-info input,
+.cadastro-form input,
+.cadastro-form select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 10px;
     font-size: 14px;
-    margin-top: 5px;
+    color: #333;
+    background-color: #f9f9f9;
 }
 
-.cadastro-form input[disabled] {
-    background-color: #f5f5f5;
-    color: #888;
-    cursor: not-allowed;
+.cota-info input[readonly] {
+    background-color: #f1f1f1;
+}
+
+.cadastro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .button-group {
@@ -62,9 +69,19 @@
 }
 
 .reservar-button,
-.cancelar-button,
+.cancelar-button{
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
 .voltar-button {
     padding: 10px 15px;
+    margin-left: 20px;
     font-weight: bold;
     font-size: 14px;
     border-radius: 8px;
@@ -105,4 +122,23 @@
     font-size: 14px;
     margin-top: 10px;
     font-weight: bold;
+}
+
+.reserva-concluida {
+    background-color: #e6f7e6;
+    border: 1px solid #a5d6a7;
+    color: #2e7d32;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.reserva-concluida-icon {
+    font-size: 24px;
+    color: #2e7d32;
 }

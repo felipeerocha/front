@@ -53,13 +53,16 @@
     font-weight: 400;
 }
 
-.button-group, .login-form button {
-    display: flex;
+.login-button{
+    margin-left: 20px;
+    margin: 0 10px;
     justify-content: center;
+    gap: 20px;
     margin-top: 20px;
 }
 
-.login-form button, .minhas-cotas button {
+.login-button, .voltar-button {
+    flex: 1;
     padding: 10px 15px;
     font-weight: bold;
     font-size: 14px;
@@ -70,42 +73,59 @@
     color: white;
 }
 
-.login-form button {
+.login-button {
     background-color: #007ab7;
-    margin-top: 10px;
 }
 
-.logout-button {
-    background-color: #e74c3c;
-    color: white;
+.voltar-button {
+    background-color: #ccc;
+    color: #333;
 }
 
-.logout-button:hover {
-    background-color: #c0392b;
-}
-
-.login-form button:hover, .reservar-button:hover {
+.login-button:hover {
     background-color: #005f8a;
 }
 
-.reservar-button, .editar-button, .excluir-button {
+.voltar-button:hover {
+    background-color: #aaa;
+}
+
+/* Estilos específicos para botões de Editar e Excluir */
+.editar-button {
+    margin-top: 10px;
+    margin-left: 10px;
     padding: 10px;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     color: white;
+    border: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.excluir-button {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    border: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
 }
 
 .editar-button {
     background-color: #3498db;
 }
 
-.excluir-button {
-    background-color: #e74c3c;
-}
-
 .editar-button:hover {
     background-color: #2980b9;
+}
+
+.excluir-button {
+    background-color: #e74c3c;
 }
 
 .excluir-button:hover {

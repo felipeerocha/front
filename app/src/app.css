@@ -4,7 +4,7 @@ body, html {
 }
 
 #root {
-    background-image: url('assets/img/stefanini-fundo.png'); /* Substitua pelo caminho da sua imagem */
+    background-color: #007ab753;
     background-size: cover; /* Ajusta a imagem para cobrir toda a tela */
     background-position: center; /* Centraliza a imagem */
     background-repeat: no-repeat; /* Evita a repetição da imagem */
@@ -12,4 +12,3 @@ body, html {
     display: flex;
     flex-direction: column;
 }
-

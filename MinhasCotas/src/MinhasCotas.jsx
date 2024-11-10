@@ -23,18 +23,15 @@ const MinhasCotas = () => {
       if (!response.ok) throw new Error(`Erro ${response.status}: ${response.statusText}`);
 
       const data = await response.json();
-      
-      // Filtra apenas as cotas cadastradas pelo nome de usuário, sem limitar pelo número da cota
       const userCotas = data.filter(cadastro => cadastro.nomeUsuario === authData.nomeUsuario);
 
       if (userCotas.length === 0) throw new Error("Esse usuário não possui cadastro de cotas.");
 
-      // Adiciona os valores corretos de Tipo e Valor para cada cota associada ao consórcio
       const visualizacaoCotas = userCotas.map(cota => ({
         id: cota.id || 'Não especificado',
-        tipo: cota.tipoConsorcio || 'Consórcio Carro', // Substitua conforme necessário para exibir o tipo correto
+        tipo: cota.tipoConsorcio || 'Consórcio Carro',
         numeroCota: cota.numeroCota,
-        valor: cota.valorCota || 'Não especificado' // Substitua conforme necessário para exibir o valor correto
+        valor: cota.valorCota || 'Não especificado'
       }));
 
       setCotas(visualizacaoCotas);
@@ -93,7 +90,14 @@ const MinhasCotas = () => {
             onChange={handleInputChange}
           />
         </label>
-        <button onClick={handleLogin}>Login</button>
+        <div className="button-group">
+          <button className="voltar-button" type="button" onClick={() => window.location.href = '/'}>
+            Voltar Início
+          </button>
+          <button className="login-button" onClick={handleLogin}>
+            Login
+          </button>
+        </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     );
@@ -106,20 +110,22 @@ const MinhasCotas = () => {
       {cotas.length === 0 ? (
         <p>Nenhum cadastro encontrado.</p>
       ) : (
-        <ul>
-          {cotas.map((cota) => (
-            <li key={cota.numeroCota}>
-              <p><strong>ID da Cota:</strong> {cota.id}</p>
-              <p><strong>Tipo de Consórcio:</strong> {cota.tipo || 'Não especificado'}</p>
-              <p><strong>Número da Cota:</strong> {cota.numeroCota}</p>
-              <p><strong>Valor:</strong> {cota.valor || 'Não preenchido'}</p>
-              <button onClick={() => handleDeleteCota(cota.numeroCota)}>Excluir Cota</button>
-              <button onClick={() => window.location.href = `/editar-cota?id=${cota.numeroCota}`}>
-                Editar Cota
-              </button>
-            </li>
-          ))}
-        </ul>
+<ul>
+  {cotas.map((cota) => (
+    <li key={cota.numeroCota}>
+      <p><strong>ID da Cota:</strong> {cota.id}</p>
+      <p><strong>Tipo de Consórcio:</strong> {cota.tipo || 'Não especificado'}</p>
+      <p><strong>Número da Cota:</strong> {cota.numeroCota}</p>
+      <p><strong>Valor:</strong> {cota.valor || 'Não preenchido'}</p>
+      <button className="excluir-button" onClick={() => handleDeleteCota(cota.numeroCota)}>
+        Excluir Reserva
+      </button>
+      <button className="editar-button" onClick={() => window.location.href = `/editar-cota?id=${cota.numeroCota}`}>
+        Editar Reserva
+      </button>
+    </li>
+  ))}
+</ul>
       )}
     </div>
   );

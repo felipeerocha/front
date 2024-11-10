@@ -10,6 +10,40 @@
     margin: 30px auto; /* Reduzido de 50px */
     text-align: center;
 }
+/* Button */
+.btn, .my-cotas-button {
+    font-family: 'Poppins', sans-serif;
+    background-color: #007ab7;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #f7f7f7;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 20px;
+    display: block;
+    padding: 10px 15px;
+    border: none;
+  }
+  
+  /* Button */
+.btn, .my-cotas-button {
+    font-family: 'Poppins', sans-serif;
+    background-color: #007ab7;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #f7f7f7;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: -40px;
+    display: block;
+    padding: 10px 15px;
+    border: none;
+  }
+  .btn:hover, .my-cotas-button:hover {
+    background-color: #aaaaaa;
+  }
 
 .status-disponivel {
     color: green;

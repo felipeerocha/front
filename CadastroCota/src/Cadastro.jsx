@@ -2,17 +2,15 @@ import React, { useEffect, useState } from 'react';
 import './Cadastro.css';
 
 const Cadastro = () => {
-  // Estados para dados da cota, reserva, mensagens de erro e dados do formulário
   const [cota, setCota] = useState({});
   const [reservaConcluida, setReservaConcluida] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [formData, setFormData] = useState({
     NomeUsuario: '',
     Contato: '',
-    Parcelamento: ''
+    Parcelamento: '1'
   });
 
-  // Efeito para definir os parâmetros da cota a partir da URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setCota({
@@ -23,13 +21,11 @@ const Cadastro = () => {
     });
   }, []);
 
-  // Função para lidar com mudanças nos inputs do formulário
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Função para concluir a reserva e enviar dados para o backend
   const handleConcluirReserva = async () => {
     setErrorMessage('');
     try {
@@ -57,58 +53,75 @@ const Cadastro = () => {
     }
   };
 
-  // Exibição de mensagem de sucesso caso a reserva seja concluída
   if (reservaConcluida) {
     return (
       <div className="cadastro-cota">
         <h2>Reserva Concluída!</h2>
+        <div className="reserva-concluida">
+          <span className="reserva-concluida-icon">✔️</span>
+          <div>
+            <p>O seu usuário é: <strong>{formData.NomeUsuario}</strong></p>
+            <p>Número da cota: <strong>{cota.numeroCota}</strong></p>
+          </div>
+        </div>
         <button className="voltar-button" type="button" onClick={() => window.location.href = '/MinhasCotas'}>
           Visualizar Minhas Cotas
         </button>
-        <button className="voltar-button" type="button" onClick={() => window.location.href = '/carro'}>
+        <button className="voltar-button" type="button" onClick={() => window.location.href = '/'}>
           Voltar
         </button>
       </div>
     );
   }
 
-  // Renderização do formulário de cadastro da cota
   return (
     <div className="cadastro-cota">
       <h2>Cadastro da Cota</h2>
-      <form className="cadastro-form">
-        <label>ID da Cota:
-          <input type="text" value={cota.id || ''} disabled />
-        </label>
-        <label>Número da Cota:
-          <input type="text" value={cota.numeroCota || ''} disabled />
-        </label>
-        <label>Tipo de Consórcio:
-          <input type="text" value={cota.tipo || ''} disabled />
-        </label>
-        <label>Valor:
-          <input type="text" value={cota.valor ? `R$ ${cota.valor.toFixed(2)}` : ''} disabled />
-        </label>
-        <label>Nome do Usuário:
-          <input type="text" name="NomeUsuario" value={formData.NomeUsuario} onChange={handleInputChange} />
-        </label>
-        <label>Contato:
-          <input type="text" name="Contato" value={formData.Contato} onChange={handleInputChange} />
-        </label>
-        <label>Parcelamento:
-          <input type="text" name="Parcelamento" value={formData.Parcelamento} onChange={handleInputChange} />
-        </label>
-      </form>
+      <div className="cadastro-container">
+        <form className="cota-info" onSubmit={(e) => e.preventDefault()}>
+          <label>ID da Cota:
+            <input type="text" value={cota.id || ''} readOnly />
+          </label>
+          <label>Número da Cota:
+            <input type="text" value={cota.numeroCota || ''} readOnly />
+          </label>
+          <label>Tipo de Consórcio:
+            <input type="text" value={cota.tipo || ''} readOnly />
+          </label>
+          <label>Valor:
+            <input type="text" value={cota.valor ? `R$ ${cota.valor.toFixed(2)}` : ''} readOnly />
+          </label>
+        </form>
+        <form className="cadastro-form">
+          <label>Nome do Usuário:
+            <input type="text" name="NomeUsuario" value={formData.NomeUsuario} onChange={handleInputChange} />
+          </label>
+          <label>Contato:
+            <input type="text" name="Contato" value={formData.Contato} onChange={handleInputChange} />
+          </label>
+          <label>Parcelamento:
+            <select name="Parcelamento" value={formData.Parcelamento} onChange={handleInputChange}>
+              {[...Array(12).keys()].map(i => {
+                const parcelas = i + 1;
+                const valorParcela = (cota.valor / parcelas).toFixed(2);
+                return <option key={parcelas} value={parcelas}>{parcelas}x de R$ {valorParcela}</option>;
+              })}
+            </select>
+          </label>
+        </form>
+      </div>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <button className="voltar-button" type="button" onClick={() => window.location.href = '/carro'}>
-        Voltar
-      </button>
-      <button className="reservar-button" type="button" onClick={handleConcluirReserva}>
-        Concluir Reserva
-      </button>
-      <button className="cancelar-button" type="button" onClick={() => window.location.href = '/carro'}>
-        Cancelar Reserva
-      </button>
+      <div className="button-group">
+        <button className="voltar-button" type="button" onClick={() => window.location.href = '/'}>
+          Voltar
+        </button>
+        <button className="reservar-button" type="button" onClick={handleConcluirReserva}>
+          Concluir Reserva
+        </button>
+        <button className="cancelar-button" type="button" onClick={() => window.location.href = '/'}>
+          Cancelar Reserva
+        </button>
+      </div>
     </div>
   );
 };
