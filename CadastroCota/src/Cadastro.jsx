@@ -1,59 +1,53 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector, Provider } from 'react-redux';
+import { concluirReservaAsync, setCotaAtual, resetReserva } from '../../app/src/redux/slices/cotasSlice';
+import store from '../../app/src/redux/store';
 import './Cadastro.css';
 
-const Cadastro = () => {
-  const [cota, setCota] = useState({});
-  const [reservaConcluida, setReservaConcluida] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+const Cadastro = ({ isEditMode = false }) => {
+  const dispatch = useDispatch();
+  const reservaConcluida = useSelector((state) => state.cotas.reservaConcluida);
+  const errorMessage = useSelector((state) => state.cotas.errorMessage);
+  const cota = useSelector((state) => state.cotas.cotaAtual);
+
   const [formData, setFormData] = useState({
     NomeUsuario: '',
     Contato: '',
-    Parcelamento: '1'
+    Parcelamento: '1',
   });
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setCota({
+    dispatch(setCotaAtual({
       id: parseInt(params.get('id'), 10) || null,
       numeroCota: params.get('numeroCota') || 'Desconhecido',
       tipo: params.get('tipo') || 'Desconhecido',
       valor: parseFloat(params.get('valor')) || 0,
-    });
-  }, []);
+    }));
+  }, [dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleConcluirReserva = async () => {
-    setErrorMessage('');
-    try {
-      const response = await fetch(`https://localhost:7008/api/Cadastro`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          CotaId: cota.id,
-          NumeroCota: cota.numeroCota,
-          NomeUsuario: formData.NomeUsuario,
-          Contato: formData.Contato,
-          Parcelamento: formData.Parcelamento,
-          DataCadastro: new Date().toISOString(),
-        }),
-      });
+  const handleConcluirReserva = () => {
+    const parcelas = parseInt(formData.Parcelamento, 10);
+    const valorParcela = cota.valor ? (cota.valor / parcelas).toFixed(2) : '0.00';
+    const parcelamentoFormatado = `${parcelas}x de R$ ${valorParcela}`;
 
-      if (!response.ok) throw new Error(`Erro ${response.status}: ${response.statusText}`);
-      setReservaConcluida(true);
-    } catch (error) {
-      console.error('Erro ao concluir a reserva:', error);
-      setErrorMessage('Não foi possível concluir a reserva. Tente novamente.');
-    }
+    dispatch(concluirReservaAsync({
+      cotaId: cota.id,
+      numeroCota: cota.numeroCota,
+      nomeUsuario: formData.NomeUsuario,
+      contato: formData.Contato,
+      parcelamento: parcelamentoFormatado,
+      tipo: cota.tipo,
+      valor: cota.valor,
+    }));
   };
 
-  if (reservaConcluida) {
+  if (reservaConcluida && !isEditMode) {
     return (
       <div className="cadastro-cota">
         <h2>Reserva Concluída!</h2>
@@ -76,7 +70,7 @@ const Cadastro = () => {
 
   return (
     <div className="cadastro-cota">
-      <h2>Cadastro da Cota</h2>
+      <h2>{isEditMode ? 'Editar Cota' : 'Reserva de Cota'}</h2>
       <div className="cadastro-container">
         <form className="cota-info" onSubmit={(e) => e.preventDefault()}>
           <label>ID da Cota:
@@ -103,7 +97,7 @@ const Cadastro = () => {
             <select name="Parcelamento" value={formData.Parcelamento} onChange={handleInputChange}>
               {[...Array(12).keys()].map(i => {
                 const parcelas = i + 1;
-                const valorParcela = (cota.valor / parcelas).toFixed(2);
+                const valorParcela = cota.valor ? (cota.valor / parcelas).toFixed(2) : '0.00';
                 return <option key={parcelas} value={parcelas}>{parcelas}x de R$ {valorParcela}</option>;
               })}
             </select>
@@ -116,9 +110,9 @@ const Cadastro = () => {
           Voltar
         </button>
         <button className="reservar-button" type="button" onClick={handleConcluirReserva}>
-          Concluir Reserva
+          {isEditMode ? 'Salvar Alterações' : 'Concluir Reserva'}
         </button>
-        <button className="cancelar-button" type="button" onClick={() => window.location.href = '/'}>
+        <button className="cancelar-button" type="button" onClick={() => dispatch(resetReserva())}>
           Cancelar Reserva
         </button>
       </div>
@@ -126,4 +120,10 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+const CadastroWithProvider = () => (
+  <Provider store={store}>
+    <Cadastro />
+  </Provider>
+);
+
+export default CadastroWithProvider;

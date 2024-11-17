@@ -1,3 +1,4 @@
+// Carro.jsx
 import React, { useEffect, useState } from 'react';
 import './carro.css';
 
@@ -26,13 +27,13 @@ const Carro = () => {
 
   const reservarCota = (cota) => {
     if (cota.status === 'Disponível') {
-      navegarParaCadastro(cota.id, cota.numeroCota, 'Carro', cota.valor);
+      navegarParaCadastro(cota.id, cota.numeroCota, cota.tipo, cota.valor);
     }
   };
 
   return (
     <div className="container-cotas">
-      <button className="my-cotas-button" onClick={() => window.location.href = `/MinhasCotas`}> Minhas Cotas</button>
+      <button className="my-cotas-button" onClick={() => window.location.href = '/MinhasCotas'}>Minhas Cotas</button>
       <h2 className="titulo">Escolha uma Cota</h2>
       <div className="cotas-grid">
         {cotas.map((cota) => (

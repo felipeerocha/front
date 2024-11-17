@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { login, logout } from '../../app/src/redux/slices/authSlice';
+import store from '../../app/src/redux/store';
 import './MinhasCotas.css';
 
-const MinhasCotas = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const MinhasCotasContent = () => {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
   const [authData, setAuthData] = useState({ nomeUsuario: '', numeroCota: '' });
-  const [cotas, setCotas] = useState([]);
+  const [cadastros, setCadastros] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState({ show: false, cadastroId: null });
+  const [searchId, setSearchId] = useState(''); // New state for search bar
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAuthData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchId(e.target.value);
   };
 
   const handleLogin = async () => {
@@ -23,19 +34,20 @@ const MinhasCotas = () => {
       if (!response.ok) throw new Error(`Erro ${response.status}: ${response.statusText}`);
 
       const data = await response.json();
-      const userCotas = data.filter(cadastro => cadastro.nomeUsuario === authData.nomeUsuario);
+      const userCadastros = data.filter(cadastro => cadastro.nomeUsuario === authData.nomeUsuario);
 
-      if (userCotas.length === 0) throw new Error("Esse usuário não possui cadastro de cotas.");
+      if (userCadastros.length === 0) throw new Error("Esse usuário não possui cadastro de cotas.");
 
-      const visualizacaoCotas = userCotas.map(cota => ({
-        id: cota.id || 'Não especificado',
-        tipo: cota.tipoConsorcio || 'Consórcio Carro',
-        numeroCota: cota.numeroCota,
-        valor: cota.valorCota || 'Não especificado'
+      const visualizacaoCadastros = userCadastros.map(cadastro => ({
+        id: cadastro.id,
+        tipo: cadastro.tipo ? cadastro.tipo : 'Tipo de consórcio não especificado',
+        numeroCota: cadastro.numeroCota,
+        valor: cadastro.valor !== undefined ? `R$ ${parseFloat(cadastro.valor).toFixed(2)}` : 'Valor não especificado',
+        parcelamento: cadastro.parcelamento
       }));
 
-      setCotas(visualizacaoCotas);
-      setIsAuthenticated(true);
+      setCadastros(visualizacaoCadastros);
+      dispatch(login(authData));
     } catch (error) {
       setErrorMessage('Erro ao autenticar. Verifique os dados e tente novamente.');
       console.error('Erro ao autenticar:', error);
@@ -43,35 +55,40 @@ const MinhasCotas = () => {
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCotas([]);
+    dispatch(logout());
+    setCadastros([]);
     setAuthData({ nomeUsuario: '', numeroCota: '' });
     setErrorMessage('');
   };
 
-  const handleDeleteCota = async (cotaId) => {
+  const handleDeleteCadastro = async () => {
     try {
       const authHeader = 'Basic ' + btoa(`${authData.nomeUsuario}:${authData.numeroCota}`);
-      const response = await fetch(`https://localhost:7008/api/Cotas/${cotaId}`, {
+      const response = await fetch(`https://localhost:7008/api/Cadastro/${confirmDelete.cadastroId}`, {
         method: 'DELETE',
         headers: { 'Authorization': authHeader, 'Accept': 'application/json' }
       });
 
       if (response.ok) {
-        setCotas(cotas.filter((cota) => cota.id !== cotaId));
+        setCadastros(cadastros.filter((cadastro) => cadastro.id !== confirmDelete.cadastroId));
+        setConfirmDelete({ show: false, cadastroId: null });
       } else {
         throw new Error(`Erro ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Erro ao excluir a cota:', error);
-      setErrorMessage('Não foi possível excluir a cota. Tente novamente.');
+      console.error('Erro ao excluir o cadastro:', error);
+      setErrorMessage('Não foi possível excluir o cadastro. Tente novamente.');
     }
   };
+
+  const filteredCadastros = cadastros.filter((cadastro) =>
+    searchId ? cadastro.id.toString().includes(searchId) : true
+  );
 
   if (!isAuthenticated) {
     return (
       <div className="login-form">
-        <h2>Login para Minhas Cotas</h2>
+        <h2>Login</h2>
         <label>
           Nome do Usuário:
           <input
@@ -105,30 +122,60 @@ const MinhasCotas = () => {
 
   return (
     <div className="minhas-cotas">
-      <h2>Bem-vindo, {authData.nomeUsuario}</h2>
-      <button onClick={handleLogout}>Logout</button>
-      {cotas.length === 0 ? (
+      <h2>Bem-vindo, {user.nomeUsuario}</h2>
+      <div className="search-container">
+        <label htmlFor="searchId">Buscar Cadastro:</label>
+        <input
+          type="text"
+          id="searchId"
+          value={searchId}
+          onChange={handleSearchChange}
+          placeholder="Digite o ID do cadastro"
+        />
+      </div>
+      {filteredCadastros.length === 0 ? (
         <p>Nenhum cadastro encontrado.</p>
       ) : (
-<ul>
-  {cotas.map((cota) => (
-    <li key={cota.numeroCota}>
-      <p><strong>ID da Cota:</strong> {cota.id}</p>
-      <p><strong>Tipo de Consórcio:</strong> {cota.tipo || 'Não especificado'}</p>
-      <p><strong>Número da Cota:</strong> {cota.numeroCota}</p>
-      <p><strong>Valor:</strong> {cota.valor || 'Não preenchido'}</p>
-      <button className="excluir-button" onClick={() => handleDeleteCota(cota.numeroCota)}>
-        Excluir Reserva
-      </button>
-      <button className="editar-button" onClick={() => window.location.href = `/editar-cota?id=${cota.numeroCota}`}>
-        Editar Reserva
-      </button>
-    </li>
-  ))}
-</ul>
+        <ul>
+            {confirmDelete.show && (
+        <div className="confirm-delete">
+          <p>Deseja realmente excluir a reserva?</p>
+          <button className="confirm-button" onClick={handleDeleteCadastro}>Confirmar</button>
+          <button className="cancel-button" onClick={() => setConfirmDelete({ show: false, cadastroId: null })}>Cancelar</button>
+        </div>
       )}
+          {filteredCadastros.map((cadastro) => (
+            <li key={cadastro.numeroCota}>
+              <p><strong>ID do Cadastro:</strong> {cadastro.id}</p>
+              <p><strong>Tipo de Consórcio:</strong> {cadastro.tipo}</p>
+              <p><strong>Número da Cota:</strong> {cadastro.numeroCota}</p>
+              <p><strong>Valor:</strong> {cadastro.valor}</p>
+              <p><strong>Parcelamento:</strong> {cadastro.parcelamento}</p>
+              <button className="excluir-button" onClick={() => setConfirmDelete({ show: true, cadastroId: cadastro.id })}>
+                Excluir Cadastro
+              </button>
+              <button className="editar-button" onClick={() => window.location.href = `/Editar?cotaId=${cota.id}&numeroCota=${cota.numeroCota}&nomeUsuario=${formData.NomeUsuario}&contato=${formData.Contato}&parcelamento=${parcelamentoFormatado}&tipo=${cota.tipo}&valor=${cota.valor}`}>
+                Editar Cadastro
+              </button>
+              
+            </li>
+          ))}
+          
+        </ul>
+      )}
+          <div className="logout-container">
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
+      </div>
     </div>
   );
+  
 };
+
+// Envolver com Provider apenas se ele não for renderizado dentro do App principal
+const MinhasCotas = () => (
+  <Provider store={store}>
+    <MinhasCotasContent />
+  </Provider>
+);
 
 export default MinhasCotas;
