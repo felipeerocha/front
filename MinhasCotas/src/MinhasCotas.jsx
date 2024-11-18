@@ -1,8 +1,36 @@
 import React, { useState } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
+import { ApolloProvider, useQuery, useMutation } from '@apollo/client';
+import { gql } from 'graphql-tag';
 import { login, logout } from '../../app/src/redux/slices/authSlice';
 import store from '../../app/src/redux/store';
+import client from '../../app/src/apolloClient'; // Importe seu Apollo Client
 import './MinhasCotas.css';
+
+// GraphQL Queries e Mutations
+const GET_CADASTROS = gql`
+  query GetCadastros($username: String!, $numeroCota: String!) {
+    getCadastros(username: $username, numeroCota: $numeroCota) {
+      id
+      cotaId
+      numeroCota
+      nomeUsuario
+      contato
+      parcelamento
+      tipo
+      valor
+      dataCadastro
+    }
+  }
+`;
+
+const DELETE_CADASTRO = gql`
+  mutation DeleteCadastro($id: ID!) {
+    deleteCadastro(id: $id) {
+      id
+    }
+  }
+`;
 
 const MinhasCotasContent = () => {
   const dispatch = useDispatch();
@@ -31,13 +59,8 @@ const MinhasCotasContent = () => {
         headers: { 'Authorization': authHeader, 'Accept': 'application/json' }
       });
 
-      if (!response.ok) throw new Error(`Erro ${response.status}: ${response.statusText}`);
-
       const data = await response.json();
       const userCadastros = data.filter(cadastro => cadastro.nomeUsuario === authData.nomeUsuario);
-
-      if (userCadastros.length === 0) throw new Error("Esse usuário não possui cadastro de cotas.");
-
       const visualizacaoCadastros = userCadastros.map(cadastro => ({
         id: cadastro.id,
         tipo: cadastro.tipo ? cadastro.tipo : 'Tipo de consórcio não especificado',
@@ -134,7 +157,8 @@ const MinhasCotasContent = () => {
         />
       </div>
       {filteredCadastros.length === 0 ? (
-        <p>Nenhum cadastro encontrado.</p>
+
+<p>Nenhum cadastro encontrado.</p>
       ) : (
         <ul>
             {confirmDelete.show && (
@@ -173,9 +197,10 @@ const MinhasCotasContent = () => {
 
 // Envolver com Provider apenas se ele não for renderizado dentro do App principal
 const MinhasCotas = () => (
-  <Provider store={store}>
-    <MinhasCotasContent />
-  </Provider>
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <MinhasCotasContent />
+    </Provider>
+  </ApolloProvider>
 );
-
 export default MinhasCotas;

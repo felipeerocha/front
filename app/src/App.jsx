@@ -1,7 +1,9 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { ApolloProvider } from '@apollo/client'; // Importa o ApolloProvider
 import store from './redux/store'; 
+import client from './apolloClient'; // Importa o cliente Apollo configurado
 import './app.css';
 
 const HomePage = React.lazy(() => import("HomeApp/HomePage"));
@@ -14,60 +16,62 @@ const MinhasCotasPage = React.lazy(() => import("MinhasCotasApp/MinhasCotasPage"
 const App = () => {
   return (
     <Provider store={store}>
-      <Router>
-        <div>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <HomePage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/Imovel"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <ImovelPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/Carro"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <CarroPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/Servico"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <ServicoPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/Cadastro"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <CadastroPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/MinhasCotas"
-              element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <MinhasCotasPage />
-                </Suspense>
-              }
-            />
-          </Routes>
-        </div>
-      </Router>
+      <ApolloProvider client={client}> {/* Envolvendo com ApolloProvider */}
+        <Router>
+          <div>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <HomePage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/Imovel"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ImovelPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/Carro"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <CarroPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/Servico"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ServicoPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/Cadastro"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <CadastroPage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/MinhasCotas"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MinhasCotasPage />
+                  </Suspense>
+                }
+              />
+            </Routes>
+          </div>
+        </Router>
+      </ApolloProvider>
     </Provider>
   );
 };

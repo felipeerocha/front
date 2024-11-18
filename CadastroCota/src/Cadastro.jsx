@@ -1,8 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector, Provider } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { gql, ApolloProvider, useMutation } from '@apollo/client';
+import { Provider } from 'react-redux';
 import { concluirReservaAsync, setCotaAtual, resetReserva } from '../../app/src/redux/slices/cotasSlice';
 import store from '../../app/src/redux/store';
+import client from './apolloClient';
 import './Cadastro.css';
+
+// Definição da mutação GraphQL
+const CREATE_CADASTRO = gql`
+  mutation CreateCadastro($input: CreateCadastroInput!) {
+    createCadastro(input: $input) {
+      id
+      cotaId
+      numeroCota
+      nomeUsuario
+      contato
+      parcelamento
+      tipo
+      valor
+    }
+  }
+`;
 
 const Cadastro = ({ isEditMode = false }) => {
   const dispatch = useDispatch();
@@ -15,6 +34,9 @@ const Cadastro = ({ isEditMode = false }) => {
     Contato: '',
     Parcelamento: '1',
   });
+
+  // Hook useMutation para chamar a mutação GraphQL
+  const [createCadastro, { data, loading, error }] = useMutation(CREATE_CADASTRO);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -36,15 +58,34 @@ const Cadastro = ({ isEditMode = false }) => {
     const valorParcela = cota.valor ? (cota.valor / parcelas).toFixed(2) : '0.00';
     const parcelamentoFormatado = `${parcelas}x de R$ ${valorParcela}`;
 
-    dispatch(concluirReservaAsync({
-      cotaId: cota.id,
-      numeroCota: cota.numeroCota,
+    const inputData = {
+      cotaId: cota.id, // Deve ser um número
+      numeroCota: parseInt(cota.numeroCota, 10), // Certifique-se de que é um número
       nomeUsuario: formData.NomeUsuario,
       contato: formData.Contato,
       parcelamento: parcelamentoFormatado,
       tipo: cota.tipo,
-      valor: cota.valor,
-    }));
+      valor: cota.valor, // Deve ser um número
+    };
+
+    console.log("Dados enviados para a mutação:", inputData); // Log dos dados enviados
+
+    createCadastro({
+      variables: { input: inputData },
+    }).then(response => {
+      console.log('Cadastro criado com sucesso:', response.data);
+      dispatch(concluirReservaAsync(response.data.createCadastro));
+    }).catch(err => {
+      console.error('Erro ao criar cadastro:', err);
+      if (err.graphQLErrors) {
+        err.graphQLErrors.forEach(({ message }) => {
+          console.error('GraphQL Error:', message);
+        });
+      }
+      if (err.networkError) {
+        console.error('Network Error:', err.networkError);
+      }
+    });
   };
 
   if (reservaConcluida && !isEditMode) {
@@ -105,6 +146,8 @@ const Cadastro = ({ isEditMode = false }) => {
         </form>
       </div>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {loading && <p>Carregando...</p>}
+      {data && <p>Cadastro criado com sucesso!</p>}
       <div className="button-group">
         <button className="voltar-button" type="button" onClick={() => window.location.href = '/'}>
           Voltar
@@ -121,9 +164,11 @@ const Cadastro = ({ isEditMode = false }) => {
 };
 
 const CadastroWithProvider = () => (
-  <Provider store={store}>
-    <Cadastro />
-  </Provider>
+  <ApolloProvider client={client}>
+    <Provider store={store}>
+      <Cadastro />
+    </Provider>
+  </ApolloProvider>
 );
 
 export default CadastroWithProvider;

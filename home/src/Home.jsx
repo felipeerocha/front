@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { ApolloProvider, gql, useQuery } from '@apollo/client';
 import axios from 'axios';
+import client from './apolloClient'; // Importação do cliente Apollo configurado
 import casaImg from './assets/img/casa.jpg';
 import carroImg from './assets/img/carro.jpg';
 import reformaImg from './assets/img/reforma.jpg';
@@ -7,25 +9,32 @@ import logoImg from './assets/img/logo.png';
 import pessoaImg from './assets/img/Pessoa.png';
 import './home.css';
 
-const Home = () => {
-  const [consorcios, setConsorcios] = useState([]);
+// Definindo a query GraphQL
+const GET_CONSORCIOS = gql`
+  query {
+    getConsorcios {
+      id
+      titulo
+      tipo
+      valor
+      quantidadeCotas
+    }
+  }
+`;
+
+const HomeComponent = () => {
   const [filteredConsorcios, setFilteredConsorcios] = useState([]);
   const [currentConsorcioIndex, setCurrentConsorcioIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const fetchConsorcios = async () => {
-    try {
-      const response = await axios.get('https://localhost:7008/api/Consorcios');
-      setConsorcios(response.data);
-      setFilteredConsorcios(response.data); // Inicia com todos os consórcios
-    } catch (error) {
-      console.error('Erro ao buscar consórcios:', error);
-    }
-  };
+  // Usando o hook useQuery para buscar os dados
+  const { data, loading, error } = useQuery(GET_CONSORCIOS);
 
   useEffect(() => {
-    fetchConsorcios();
-  }, []);
+    if (data && data.getConsorcios) {
+      setFilteredConsorcios(data.getConsorcios); // Inicializa com todos os consórcios recebidos
+    }
+  }, [data]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -67,11 +76,14 @@ const Home = () => {
   const handleSearch = (event) => {
     const searchTerm = event.target.value.toLowerCase();
     setSearchTerm(searchTerm);
-    const filtered = consorcios.filter(consorcio => 
+    const filtered = data?.getConsorcios?.filter(consorcio => 
       consorcio.tipo.toLowerCase().includes(searchTerm)
-    );
+    ) || [];
     setFilteredConsorcios(filtered);
   };
+
+  if (loading) return <p>Carregando...</p>;
+  if (error) return <p>Erro ao buscar consórcios: {error.message}</p>;
 
   return (
     <div className="home-page">
@@ -85,7 +97,7 @@ const Home = () => {
           value={searchTerm} 
           onChange={handleSearch} 
         />
-        <button className="my-cotas-button" onClick={() => window.location.href = `/MinhasCotas`}> Minhas Cotas</button>
+        <button className="my-cotas-button" onClick={() => window.location.href = `/MinhasCotas`}>Minhas Cotas</button>
       </nav>
 
       {/* Carousel Section */}
@@ -112,7 +124,7 @@ const Home = () => {
 
       {/* Additional Sections */}
       <section className="carousel-section">
-        <h2 className="carousel-phrase">Encontre o <span className="highlighted-text">Consórcio</span><br />Perfeito para <span className="highlighted-text">Você. </span></h2>
+        <h2 className="carousel-phrase">Encontre o <span className="highlighted-text">Consórcio</span><br />Perfeito para <span className="highlighted-text">Você.</span></h2>
         <img src={pessoaImg} alt="Imagem Pessoa" className="Pessoa" />
       </section>
 
@@ -158,5 +170,11 @@ const Home = () => {
     </div>
   );
 };
+
+const Home = () => (
+  <ApolloProvider client={client}>
+    <HomeComponent />
+  </ApolloProvider>
+);
 
 export default Home;
